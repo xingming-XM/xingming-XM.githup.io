@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>主页</title>
+    <style>
+      *{
+        margin:0;
+        padding:0;
+        list-style-type:none;
+        text-decoration:none;
+        }      
+      
+      body{
+        width:100vw;
+        height:100vh;
+        background-color:#F9F9F9;
+        background-image:url("./images/bg-img.jpg");
+        background-size:100% 100vh;       
+        background-repeat:no-repeat; 
+        position:fixed;
+        top:0;
+        left:0;         
+        }
+      
+     .logo{       
+       width:90%;
+       height:125px;
+       overflow:hidden;
+       background-color:rgba(255,255,255,0.3);
+       backdrop-filter:blur(10px);
+       border-radius:15px;
+       margin:auto;
+       margin-top:150px;
+       display:flex;
+       justify-content:center;
+       align-items:center;      
+       }
+     
+     .logo>h1{
+       width:200px;
+       height:80px;
+       line-height:80px;
+       text-align:center;
+       font-size:50px;
+       letter-spacing:0.3rem;
+       margin:0 5px;
+       color:white;
+      }
+   
+     .logo>div{
+       width:75px;
+       height:80px;
+       box-sizing:border-box;
+       padding:20px 0;
+       }
+   
+     .logo>div>p{
+       height:22.5px;
+       line-height:22.5px;  
+       font-size:16px; 
+       color:white;
+       }
+     
+     @keyframes translates{
+        from{
+         transform:translateX(125%);
+         }
+       to{
+         transform:translateX(-125%);
+         }
+       }
+     
+     .search{
+       width:90%;
+       height:60px;
+       margin:10px auto;
+       position:relative;
+       }
+     
+    .search>form{
+      display:block;
+      height:100%;
+      }
+    
+    .search>form>input{
+      width:100%;
+      height:60px;
+      background-color:rgba(255,255,255,0.3);
+      backdrop-filter:blur(10px);   
+      outline:none;
+      border:none;   
+      box-sizing:border-box;
+      padding:0 20px 0 70px;
+      font-size:16px;
+      color:white;      
+      border-radius:15px;
+      }
+    
+    .search>form>img{
+     position:absolute;
+     top:2px;
+     left:3px;
+     height:30px;
+     background-color:rgba(255,255,255,0);
+     border-radius:15px;
+     padding:12.5px;     
+     }
+    
+    .search>form>input::placeholder{
+       color:rgba(255,255,255,0.5)
+       }
+     
+    .search>form>ul{
+      position:absolute;
+      top:70px;
+      left:0;
+      height:0;
+      width:100%;
+      border-radius:15px;
+      overflow:hidden;
+      background-color:rgba(255,255,255,0.3);
+      backdrop-filter:blur(10px);
+      transition:all 0.2s;
+      }       
+    
+     .search>form>ul>li{
+       width:75px;
+       height:75px;
+       float:left;
+       overflow:hidden;
+       text-align:center;
+       color:white;
+       }
+     
+     .search>form>ul>li>img{
+       height:30px;
+       margin-top:10px;
+       }
+     
+     .search>form>ul>li>p{
+       font-size:14px;
+       }
+     
+     .search>form>ul>span{
+       width:40px;
+       height:3px;
+       background-color:white;
+       border-radius:5px;
+       position:absolute;
+       bottom:5px;
+       left:17px;
+       transition:all 0.2s;
+       }
+          
+     
+  
+   </style>
+  </head>
+  <body>	
+    
+    <div class="logo">
+      <h1></h1>
+      <div>
+        <p></p>
+        <p></p>
+      </div>
+    </div>
+    <div class="search">
+      <form>
+        <input type="text" placeholder="输入搜索关键词"/>
+        <img src="./images/bing.svg"/> 
+        <ul>
+          <span></span>
+          <li data-id="1">
+            <img src="./images/bing.svg"/>
+            <p>必应</p>
+          </li>
+          <li data-id="2">
+            <img src="./images/google.svg"/>
+            <p>谷歌</p>
+          </li>
+          <li data-id="3">
+            <img src="./images/baidu.svg"/>
+            <p>百度</p>
+          </li>          
+        </ul>
+      </form>
+    </div>
+    
+    <script>
+    
+      // 获取元素
+      const timeFirst = document.querySelector(".logo>h1")
+      const timeSecond = document.querySelector(".logo>div>p:nth-child(1)")
+      const timeThrid = document.querySelector(".logo>div>p:nth-child(2)")
+      const ulFirst = document.querySelector(".search>form>ul")
+      const spanFirst = document.querySelector(".search>form>ul>span")
+      const imgFirst = document.querySelector(".search>form>img")
+      const iptForm = document.querySelector(".search>form")
+       
+      
+      // 全局变量
+      let hour
+      let minute
+      let second
+      let year
+      let month
+      let dates
+      let day
+      let engineIndex = 1
+      const dayArr = ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"]
+      const engineArr = [
+       {searchName:"必应",enhineUrl:"https://www.bing.com/search?q=",imgurl:"./images/bing.svg"},
+       {searchName:"谷歌",enhineUrl:"https://www.google.com/search?q=",imgurl:"./images/google.svg"},
+       {searchName:"百度",enhineUrl:"https://www.baidu.com/s?wd=",imgurl:"./images/baidu.svg"},       
+      ]
+      
+      // 补0函数
+      function getNumber(number){
+          return number < 10 ? "0" + number : number
+      }
+      
+      // 时间显示      
+      function getTime(){
+      const dateTime = new Date()
+      
+      hour = dateTime.getHours()
+      minute = dateTime.getMinutes()
+      second = dateTime.getSeconds()
+      month = dateTime.getMonth() + 1
+      dates = dateTime.getDate()
+      day = dateTime.getDay() - 1
+      
+      hour = getNumber(hour)
+      minute = getNumber(minute)
+      second = getNumber(second)
+      month = getNumber(month)
+      dates = getNumber(dates)
+      
+      timeFirst.innerText = `${hour}:${minute}:${second}`
+      timeSecond.innerText = dayArr[day]
+      timeThrid.innerText = `${month}月${dates}日`
+      }
+      
+      getTime()        
+                
+      setInterval(() => {
+          getTime()
+       },1000)
+          
+      function openEngineList(){
+        ulFirst.style.height = "75px"
+      }
+   
+      function closeEngineList(){
+        ulFirst.style.height = "0"       
+      }
+     
+      ulFirst.addEventListener("click",function(e){
+              let target = e.target
+              if(target.tagName == "UL"){
+                return
+                }
+              if(target.tagName !== "LI"){
+                  target = target.closest("li")
+                }              
+             engineIndex = +target.dataset.id
+             spanFirst.style.left = target.offsetLeft + 17 + "px"
+             localStorage.setItem("indexFirst",engineIndex)
+             setTimeout(() => closeEngineList() ,200)
+          })
+     
+      imgFirst.addEventListener("click",function(){
+            openEngineList()                                
+         })
+       
+      iptForm.addEventListener("submit",function(e){
+             e.preventDefault()
+             
+          })
+    
+    </script>
+    <script src="js/vconsole.min.js"></script>
+    <script>
+      var vConsole = new VConsole()      
+    </script> 
+            
+  </body>
+</html>
